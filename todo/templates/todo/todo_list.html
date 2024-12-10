@@ -1,0 +1,50 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<div class="container">
+    <a href="{% url 'todo_create' %}" class="add-btn">新しいTODOを追加</a>
+
+    <div id="map" class="map"></div>
+
+    <!-- TODOデータをスクリプトタグに埋め込む -->
+    <script id="todos-data" type="application/json">
+        {{todos_json | safe }}
+    </script>
+
+    <ul class="todo-list" id="todo-list">
+        {% for todo in todo_lists %}
+            <li id="todo-item-{{ todo.id }}" class="todo-item">
+                <button class="complete-btn" data-id="{{ todo.id }}">
+                    {% if todo.completed %}未完了に戻す{% else %}完了{% endif %}
+                </button>
+                <strong>{{ todo.title }}</strong>: 
+                <span class="description">{{ todo.description }}</span>
+                <button class="edit-btn" data-id="{{ todo.id }}">編集</button>
+                <button class="delete-btn" data-id="{{ todo.id }}">削除</button>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+<!-- モーダル -->
+<div id="update-modal" style="display: none;">
+    <div id="error-message" style="color: red; display: none;"></div>
+    <form id="update-form">
+        {% csrf_token %}
+        <input type="hidden" name="id" id="todo-id">
+        <label for="title">タイトル: <input type="text" name="title" id="todo-title"></label>
+        <label for="description">説明: <textarea name="description" id="todo-description"></textarea></label>
+        <button type="submit">更新</button>
+    </form>
+</div>
+
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+{% load static %}
+<script src="{% static 'todo/js/todo_list.js' %}" defer></script>
+<script src="{% static 'todo/js/gps.js' %}" defer></script>
+{% endblock %}

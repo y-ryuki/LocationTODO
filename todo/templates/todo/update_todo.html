@@ -1,0 +1,10 @@
+{% extends "base/base.html" %}
+{% block body %}
+    <h1>Update Todo: {{ todo.title }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{form}}
+        <button type="submit">Update</button>
+    </form>
+    <a href="{% url 'todo_list' %}">Back to List</a>
+{% endblock %}
